@@ -6,6 +6,8 @@ A minimalist note-taking app built with Rails 8 that lets you save text, links, 
 
 [quickdrop.sharecon.space](https://quickdrop.sharecon.space/)
 
+https://github.com/user-attachments/assets/0fe4ddc1-5fff-476f-b771-d0ce88d8b6cd
+
 ## Features
 
 ### Core Functionality
