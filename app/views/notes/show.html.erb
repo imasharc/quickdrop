@@ -1,0 +1,86 @@
+<div class="flex-1 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <%= link_to "← Back to Notes", notes_path, class: "text-blue-600 hover:text-blue-700 font-medium" %>
+      </div>
+      <div class="flex space-x-3">
+        <%= link_to "Edit", edit_note_path(@note), 
+            class: "text-gray-600 hover:text-gray-800 font-medium" %>
+        
+        <!-- Share Toggle -->
+        <%= link_to toggle_sharing_note_path(@note), method: :patch, 
+            class: "#{@note.shareable? ? 'text-green-600 hover:text-green-700' : 'text-gray-600 hover:text-gray-800'} font-medium" do %>
+          <%= @note.shareable? ? "🔗 Shared" : "Share" %>
+        <% end %>
+        
+        <%= link_to "Delete", @note, method: :delete,
+            data: { 
+              confirm: "Are you sure?", 
+              turbo_method: :delete 
+            },
+            class: "text-red-600 hover:text-red-700 font-medium" %>
+      </div>
+    </div>
+
+    <!-- Share Link (if shareable) -->
+    <% if @note.shareable? %>
+      <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+        <h4 class="text-green-800 font-medium mb-2">✅ This note is shareable</h4>
+        <div class="flex items-center space-x-2">
+          <input type="text" 
+                 value="<%= @note.shareable_url %>" 
+                 readonly
+                 id="share-url"
+                 class="flex-1 px-3 py-2 text-sm border border-green-300 rounded bg-white">
+          <button onclick="copyShareUrl()" 
+                  class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+            Copy
+          </button>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Note Content -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <% if @note.title.present? %>
+        <h1 class="text-2xl font-bold text-gray-900 mb-1"><%= @note.title %></h1>
+      <% end %>
+      
+      <div class="text-gray-700 note-content leading-relaxed whitespace-pre-line">
+        <%= raw Rinku.auto_link(@note.content.gsub(/\n/, '<br>'), :all, 'target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 hover:underline"') %>
+      </div>
+      
+      <div class="mt-6 pt-4 border-t border-gray-200">
+        <p class="text-sm text-gray-500">
+          Created <%= time_ago_in_words(@note.created_at) %> ago
+          <% if @note.updated_at != @note.created_at %>
+            • Updated <%= time_ago_in_words(@note.updated_at) %> ago
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyShareUrl() {
+  const input = document.getElementById('share-url');
+  input.select();
+  document.execCommand('copy');
+  
+  // Visual feedback
+  const button = event.target;
+  const originalText = button.textContent;
+  button.textContent = 'Copied!';
+  button.classList.add('bg-gray-500');
+  button.classList.remove('bg-green-600', 'hover:bg-green-700');
+  
+  setTimeout(() => {
+    button.textContent = originalText;
+    button.classList.remove('bg-gray-500');
+    button.classList.add('bg-green-600', 'hover:bg-green-700');
+  }, 2000);
+}
+</script>

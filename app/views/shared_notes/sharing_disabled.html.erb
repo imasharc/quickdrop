@@ -1,0 +1,40 @@
+<div class="flex-1 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl">🔒</span>
+          <div>
+            <h3 class="text-yellow-800 font-medium">Sharing Disabled</h3>
+            <p class="text-yellow-600 text-sm">The owner of this note has disabled sharing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+      <h1 class="text-2xl font-bold text-gray-900 mb-4">This note is no longer shared</h1>
+      
+      <p class="text-gray-600 mb-6">
+        The owner of this note has turned off sharing. This is not an error - 
+        it's a privacy choice made by the note's creator.
+      </p>
+
+      <div class="space-y-3">
+        <p class="text-sm text-gray-500">
+          Note owners can enable or disable sharing for their notes at any time.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-8 text-center bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Create your own notes</h3>
+      <p class="text-gray-600 mb-4">Start saving and sharing your own notes with QuickDrop</p>
+      <%= link_to "Get Started Free", new_user_registration_path, 
+          class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" %>
+    </div>
+  </div>
+</div>

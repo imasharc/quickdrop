@@ -1,0 +1,122 @@
+<div class="flex-1 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Create Note</h1>
+      <p class="text-gray-600 mt-1">Drop your thoughts, links, or snippets here</p>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white rounded-lg shadow-lg p-4">
+      <%= form_with model: @note, local: true, class: "space-y-6", id: "note-form" do |f| %>
+        <%= render "shared/error_messages", resource: @note if @note.errors.any? %>
+
+        <!-- Title Field (Optional) -->
+        <div>
+          <%= f.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :title, 
+              placeholder: "Give your note a title (optional)", 
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors",
+              id: "note-title" %>
+        </div>
+
+        <!-- Content Field -->
+        <div>
+          <%= f.label :content, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_area :content, 
+              placeholder: "Paste your text, links, code, or ideas here...", 
+              rows: 1,
+              class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none",
+              id: "note-content" %>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-between items-center pt-2">
+          <%= link_to "Cancel", notes_path, 
+              class: "text-gray-600 hover:text-gray-800 font-medium" %>
+          
+          <div class="space-x-3">
+            <%= f.submit "Save Note", 
+                class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Quick Tips -->
+    <div class="mt-6 bg-blue-50 rounded-lg p-4">
+      <h3 class="text-sm font-medium text-blue-900 mb-2">💡 Quick Tips</h3>
+      <ul class="text-sm text-blue-800 space-y-1">
+        <li>• <strong>Press Enter</strong> to save instantly</li>
+        <li>• <strong>Shift+Enter</strong> for new lines</li>
+        <li>• <strong>Tab</strong> to jump between fields</li>
+        <li>• Title is optional - great for organizing longer notes</li>
+        <li>• Perfect for URLs, code snippets, meeting notes, or random thoughts</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  function setupEnterHandling() {
+    const form = document.getElementById('note-form');
+    const contentTextarea = document.getElementById('note-content');
+    const titleInput = document.getElementById('note-title');
+    
+    if (!form || !contentTextarea || !titleInput) {
+      console.log('Form elements not found, retrying...');
+      setTimeout(setupEnterHandling, 100);
+      return;
+    }
+    
+    console.log('Setting up enter handling for new form');
+    
+    // Handle Enter in content textarea
+    contentTextarea.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if (e.shiftKey) {
+          // Shift+Enter = new line (allow default behavior)
+          return;
+        } else {
+          // Enter = save
+          e.preventDefault();
+          console.log('Submitting form');
+          form.submit();
+        }
+      }
+    });
+    
+    // Handle Enter in title field
+    titleInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if (e.shiftKey) {
+          // Shift+Enter in title = move to content and add newline
+          e.preventDefault();
+          contentTextarea.focus();
+          contentTextarea.value += '\\n';
+          contentTextarea.style.height = 'auto';
+          contentTextarea.style.height = contentTextarea.scrollHeight + 'px';
+        } else {
+          // Enter in title = save
+          e.preventDefault();
+          form.submit();
+        }
+      }
+    });
+    
+    // Auto-resize textarea
+    contentTextarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+    
+    // Focus on content
+    contentTextarea.focus();
+  }
+  
+  // Start setup immediately and also on DOM ready
+  setupEnterHandling();
+  document.addEventListener('DOMContentLoaded', setupEnterHandling);
+})();
+</script>

@@ -1,0 +1,39 @@
+<div class="flex-1 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl">❌</span>
+          <div>
+            <h3 class="text-red-800 font-medium">Note Not Found</h3>
+            <p class="text-red-600 text-sm">This note doesn't exist or the link is invalid</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+      <h1 class="text-2xl font-bold text-gray-900 mb-4">This note doesn't exist</h1>
+      
+      <p class="text-gray-600 mb-6">
+        The note you're looking for might have been deleted, or the link might be incorrect.
+      </p>
+
+      <div class="space-y-3">
+        <p class="text-sm text-gray-500">
+          Double-check the link or ask the person who shared it for an updated version.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-8 text-center bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Create your own notes</h3>
+      <p class="text-gray-600 mb-4">Start saving and sharing your own notes with QuickDrop</p>
+      <%= link_to "Get Started Free", new_user_registration_path, 
+          class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" %>
+    </div>
+  </div>
+</div>

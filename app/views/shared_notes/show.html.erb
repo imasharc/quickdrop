@@ -1,0 +1,41 @@
+<div class="flex-1 bg-gray-50">
+  <div class="max-w-2xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl">📝</span>
+          <div>
+            <h3 class="text-blue-800 font-medium">Shared Note</h3>
+            <p class="text-blue-600 text-sm">This note was shared with you via QuickDrop</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note Content -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <% if @note.title.present? %>
+        <h1 class="text-2xl font-bold text-gray-900 mb-1"><%= @note.title %></h1>
+      <% end %>
+      
+      <div class="text-gray-700 note-content leading-relaxed whitespace-pre-line">
+        <%= raw Rinku.auto_link(@note.content.gsub(/\n/, '<br>'), :all, 'target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 hover:underline"') %>
+      </div>
+      
+      <div class="mt-6 pt-4 border-t border-gray-200">
+        <p class="text-sm text-gray-500">
+          Shared <%= time_ago_in_words(@note.created_at) %> ago
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-8 text-center bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Like what you see?</h3>
+      <p class="text-gray-600 mb-4">Create your own QuickDrop account to save and share notes instantly</p>
+      <%= link_to "Get Started Free", new_user_registration_path, 
+          class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" %>
+    </div>
+  </div>
+</div>

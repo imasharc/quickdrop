@@ -1,0 +1,59 @@
+<div class="flex-1 bg-gradient-to-b from-white to-blue-50 flex flex-col justify-center">
+  <!-- Hero Section -->
+  <div class="max-w-4xl mx-auto px-6 py-8 text-center">
+    <h1 class="text-5xl font-bold text-gray-900 mb-4">
+      Drop it. <span class="text-blue-600">Find it.</span> Done.
+    </h1>
+    
+    <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+      Save text, links, and snippets instantly. No folders, no complexity. 
+      Just drop it in QuickDrop and find it when you need it.
+    </p>
+
+    <% if user_signed_in? %>
+      <div class="space-y-3 mb-12">
+        <%= link_to "Create Your First Note", new_note_path, 
+            class: "inline-block bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg hover:shadow-xl" %>
+        <p class="text-gray-500">or <%= link_to "view your notes", notes_path, class: "text-blue-600 hover:text-blue-700" %></p>
+      </div>
+    <% else %>
+      <div class="space-y-3 mb-12">
+        <%= link_to "Get Started Free", new_user_registration_path, 
+            class: "inline-block bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg hover:shadow-xl" %>
+        <p class="text-gray-500">
+          Already have an account? 
+          <%= link_to "Sign in", new_user_session_path, class: "text-blue-600 hover:text-blue-700 font-medium" %>
+        </p>
+      </div>
+    <% end %>
+
+    <!-- Features Section -->
+    <div class="max-w-3xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-6 text-center">
+        <div class="space-y-3">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <span class="text-2xl">✍️</span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Drop Anything</h3>
+          <p class="text-gray-600">Text snippets, links, ideas. Just paste and save.</p>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <span class="text-2xl">⚡</span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Find Instantly</h3>
+          <p class="text-gray-600">Search through everything you've saved in seconds.</p>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <span class="text-2xl">🔗</span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Share Simply</h3>
+          <p class="text-gray-600">Get a link to share your notes with anyone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

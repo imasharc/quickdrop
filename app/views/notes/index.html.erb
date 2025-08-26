@@ -1,0 +1,216 @@
+<div class="flex-1 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-6 py-8">
+    <!-- Header with Search -->
+    <div class="mb-8">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Your Notes</h1>
+          <p class="text-gray-600 mt-1" id="notes-counter">
+            <%= pluralize(@notes.count, 'note') %> saved
+          </p>
+        </div>
+        <%= link_to "New Note", new_note_path, 
+            class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl" %>
+      </div>
+      
+      <!-- Search Bar -->
+      <div class="relative mb-6">
+        <input type="text" 
+               id="search-input"
+               placeholder="Search your notes..." 
+               class="w-full px-4 py-3 pl-10 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center hidden">
+          <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Notes Grid -->
+    <% if @notes.any? %>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" id="notes-grid">
+        <% @notes.each do |note| %>
+          <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 h-48 flex flex-col note-card" 
+               data-title="<%= note.title.to_s.downcase %>" 
+               data-content="<%= note.content.to_s.downcase %>">
+            
+            <!-- Content Area -->
+            <div class="flex-1 overflow-hidden">
+              <% if note.title.present? %>
+                <h3 class="font-semibold text-gray-900 mb-2 line-clamp-1">
+                  <%= note.title %>
+                </h3>
+              <% end %>
+              
+              <% if note.content.present? %>
+                <div class="text-gray-600 text-sm overflow-hidden">
+                  <div class="line-clamp-4">
+                    <%= raw Rinku.auto_link(note.content, :all, 'class="text-blue-600 hover:text-blue-700"') %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- Actions - Always at bottom -->
+            <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+              <span class="text-xs text-gray-500">
+                <%= time_ago_in_words(note.created_at) %> ago
+              </span>
+              
+              <div class="flex space-x-2">
+                <%= link_to "View", note, class: "text-blue-600 hover:text-blue-700 text-sm font-medium" %>
+                <%= link_to "Edit", edit_note_path(note), class: "text-gray-600 hover:text-gray-700 text-sm font-medium" %>
+                
+                <!-- Share Toggle -->
+                <%= link_to toggle_sharing_note_path(note), 
+                    data: { turbo_method: :patch },
+                    class: "#{note.shareable? ? 'text-green-600 hover:text-green-700' : 'text-gray-600 hover:text-gray-700'} text-sm font-medium",
+                    title: note.shareable? ? 'Shared - Click to disable' : 'Click to share' do %>
+                  <%= note.shareable? ? "🔗" : "Share" %>
+                <% end %>
+                
+                <%= link_to "Delete", note, method: :delete, 
+                    data: { 
+                      confirm: "Are you sure?",
+                      turbo_method: :delete
+                    },
+                    class: "text-red-600 hover:text-red-700 text-sm font-medium" %>
+              </div>
+            </div>
+
+            <!-- Share URL (if shareable) -->
+            <% if note.shareable? %>
+              <div class="mt-3 pt-3 border-t border-green-100 bg-green-50 -mx-6 -mb-6 px-6 pb-3 rounded-b-lg">
+                <div class="flex items-center space-x-2">
+                  <input type="text" 
+                        value="<%= note.shareable_url %>" 
+                        readonly
+                        class="flex-1 px-2 py-1 text-xs border border-green-300 rounded bg-white share-url-input"
+                        onclick="this.select()">
+                  <button onclick="copyShareUrl(this)" 
+                          class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors">
+                    Copy
+                  </button>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- No results message (hidden by default) -->
+      <div id="no-results" class="text-center py-12 hidden">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-4xl">🔍</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No notes found</h3>
+        <p class="text-gray-600 mb-6">Try a different search term</p>
+        <button id="clear-search-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+          Show All Notes
+        </button>
+      </div>
+      
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-12">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-4xl">📝</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No notes yet</h3>
+        <p class="text-gray-600 mb-6">Start by creating your first note</p>
+        <%= link_to "Create Your First Note", new_note_path, 
+            class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('search-input');
+  const clearButton = document.getElementById('clear-search');
+  const clearBtn = document.getElementById('clear-search-btn');
+  const notesGrid = document.getElementById('notes-grid');
+  const noResults = document.getElementById('no-results');
+  const notesCounter = document.getElementById('notes-counter');
+  const allNotes = document.querySelectorAll('.note-card');
+  const totalNotes = allNotes.length;
+  
+  function performSearch() {
+    const query = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+    
+    allNotes.forEach(function(note) {
+      const title = note.getAttribute('data-title') || '';
+      const content = note.getAttribute('data-content') || '';
+      const matches = title.includes(query) || content.includes(query);
+      
+      if (matches) {
+        note.style.display = 'flex';
+        visibleCount++;
+      } else {
+        note.style.display = 'none';
+      }
+    });
+    
+    // Update counter
+    if (query) {
+      notesCounter.textContent = `${visibleCount} of ${totalNotes} notes`;
+      clearButton.classList.remove('hidden');
+    } else {
+      notesCounter.textContent = `${totalNotes} note${totalNotes !== 1 ? 's' : ''} saved`;
+      clearButton.classList.add('hidden');
+    }
+    
+    // Show/hide no results message
+    if (query && visibleCount === 0) {
+      notesGrid.classList.add('hidden');
+      noResults.classList.remove('hidden');
+    } else {
+      notesGrid.classList.remove('hidden');
+      noResults.classList.add('hidden');
+    }
+  }
+  
+  function clearSearch() {
+    searchInput.value = '';
+    performSearch();
+    searchInput.focus();
+  }
+  
+  // Search as user types
+  searchInput.addEventListener('input', performSearch);
+  
+  // Clear search handlers
+  clearButton.addEventListener('click', clearSearch);
+  clearBtn.addEventListener('click', clearSearch);
+  
+  // Focus search input
+  searchInput.focus();
+});
+
+// Copy share URL function
+function copyShareUrl(button) {
+  const input = button.previousElementSibling;
+  input.select();
+  document.execCommand('copy');
+  
+  // Visual feedback
+  const originalText = button.textContent;
+  button.textContent = 'Copied!';
+  button.classList.add('bg-gray-500');
+  button.classList.remove('bg-green-600', 'hover:bg-green-700');
+  
+  setTimeout(() => {
+    button.textContent = originalText;
+    button.classList.remove('bg-gray-500');
+    button.classList.add('bg-green-600', 'hover:bg-green-700');
+  }, 2000);
+}
+</script>
