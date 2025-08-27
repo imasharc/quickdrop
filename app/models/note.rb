@@ -1,10 +1,15 @@
 class Note < ApplicationRecord
   belongs_to :user
   
-  validates :content, presence: true
+  # Removed: validates :content, presence: true
+  # Allow saving notes with just titles, or even empty notes as placeholders
+  
   validates :title, length: { maximum: 255 }
   validates :content, length: { maximum: 10000 }
-
+  
+  # Allow completely empty notes - useful for placeholders, drafts, etc.
+  # No presence validation needed
+  
   scope :search, ->(query) {
     where("title ILIKE ? OR content ILIKE ?", "%#{query}%", "%#{query}%")
   }
