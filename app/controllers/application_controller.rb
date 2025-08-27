@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  # Removed: allow_browser versions: :modern
+  # 
+  # QuickDrop should work on ALL devices and browsers, not just "modern" ones.
+  # A note-taking app blocking mobile browsers is counterproductive.
+  # Users need to access their notes regardless of their browser choice.
 end
