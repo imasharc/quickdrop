@@ -8,6 +8,13 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <!-- PWA Configuration -->
+    <%= tag.link rel: "manifest", href: pwa_manifest_path %>
+    <%= tag.meta name: "theme-color", content: "#2563eb" %>
+    <%= tag.meta name: "apple-mobile-web-app-capable", content: "yes" %>
+    <%= tag.meta name: "apple-mobile-web-app-title", content: "QuickDrop" %>
+    <%= tag.link rel: "apple-touch-icon", href: "/logoipsum-custom-logo-192.png" %>
   </head>
 
   <body class="bg-white text-gray-900 font-sans min-h-screen flex flex-col">
@@ -51,5 +58,62 @@
     <main class="flex-1 flex flex-col">
       <%= yield %>
     </main>
+
+    <!-- PWA Install Prompt -->
+    <div id="pwa-install-prompt" class="hidden fixed bottom-4 left-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="font-medium">Install QuickDrop</p>
+          <p class="text-sm text-blue-100">Get instant access to your notes</p>
+        </div>
+        <div class="flex space-x-2">
+          <button id="pwa-install-btn" class="bg-white text-blue-600 px-4 py-2 rounded font-medium">
+            Install
+          </button>
+          <button id="pwa-dismiss-btn" class="text-blue-100 px-2">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    let deferredPrompt;
+    const installPrompt = document.getElementById('pwa-install-prompt');
+    const installBtn = document.getElementById('pwa-install-btn');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+    // Listen for install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Show custom install prompt
+      installPrompt.classList.remove('hidden');
+    });
+
+    // Handle install
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installPrompt.classList.add('hidden');
+      }
+    });
+
+    // Handle dismiss
+    dismissBtn.addEventListener('click', () => {
+      installPrompt.classList.add('hidden');
+      deferredPrompt = null;
+    });
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker')
+        .then(registration => console.log('SW registered'))
+        .catch(error => console.log('SW failed'));
+    }
+    </script>
   </body>
 </html>

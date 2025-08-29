@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://cloudconvert.com/
+HostUrl=https://eu-central.storage.cloudconvert.com/tasks/f0e3253e-7722-4426-9efd-9933ac0420a0/logoipsum-custom-logo%20%281%29%20%282%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cloudconvert-production%2F20250829%2Ffra%2Fs3%2Faws4_request&X-Amz-Date=20250829T133539Z&X-Amz-Expires=86400&X-Amz-Signature=1a87d909546e088722c65c03be80b1766749fe9376625f86c4fbb669dd11b78c&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3D%22logoipsum-custom-logo%20%281%29%20%282%29.png%22&response-content-type=image%2Fpng&x-id=GetObject
