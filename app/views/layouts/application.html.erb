@@ -1,3 +1,4 @@
+<!-- app/views/layouts/application.html.erb -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -77,43 +78,60 @@
       </div>
     </div>
 
+    <!-- PWA Script - Only load once -->
     <script>
-    let deferredPrompt;
-    const installPrompt = document.getElementById('pwa-install-prompt');
-    const installBtn = document.getElementById('pwa-install-btn');
-    const dismissBtn = document.getElementById('pwa-dismiss-btn');
-
-    // Listen for install prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
+    document.addEventListener('DOMContentLoaded', function() {
+      // Prevent multiple script execution
+      if (window.pwaScriptLoaded) return;
+      window.pwaScriptLoaded = true;
       
-      // Show custom install prompt
-      installPrompt.classList.remove('hidden');
-    });
+      let deferredPrompt;
+      const installPrompt = document.getElementById('pwa-install-prompt');
+      const installBtn = document.getElementById('pwa-install-btn');
+      const dismissBtn = document.getElementById('pwa-dismiss-btn');
 
-    // Handle install
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        installPrompt.classList.add('hidden');
+      // Listen for install prompt
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show custom install prompt
+        if (installPrompt) {
+          installPrompt.classList.remove('hidden');
+        }
+      });
+
+      // Handle install
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            if (installPrompt) {
+              installPrompt.classList.add('hidden');
+            }
+          }
+        });
+      }
+
+      // Handle dismiss
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+          if (installPrompt) {
+            installPrompt.classList.add('hidden');
+          }
+          deferredPrompt = null;
+        });
+      }
+
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker')
+          .then(registration => console.log('SW registered'))
+          .catch(error => console.log('SW failed'));
       }
     });
-
-    // Handle dismiss
-    dismissBtn.addEventListener('click', () => {
-      installPrompt.classList.add('hidden');
-      deferredPrompt = null;
-    });
-
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker')
-        .then(registration => console.log('SW registered'))
-        .catch(error => console.log('SW failed'));
-    }
     </script>
   </body>
 </html>

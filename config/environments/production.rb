@@ -62,12 +62,21 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.delivery_method = :postmark
+  config.action_mailer.delivery_method = :resend
   config.action_mailer.postmark_settings = {
-    api_token: ENV['POSTMARK_API_TOKEN']
+    api_token: ENV['RESEND_API_KEY']
   }
   config.action_mailer.default_url_options = { 
     host: "quickdrop.sharecon.space", 
+    protocol: 'https' 
+  }
+  config.action_mailer.default_options = {
+    from: 'noreply@quickdrop.sharecon.space'
+  }
+
+  # Ensure URL helpers use correct host
+  Rails.application.routes.default_url_options = { 
+    host: 'quickdrop.sharecon.space', 
     protocol: 'https' 
   }
 
