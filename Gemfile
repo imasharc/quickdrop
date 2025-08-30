@@ -24,8 +24,8 @@ gem 'devise'
 gem 'letter_opener', group: :development
 # Auto-link URLs in text
 gem 'rinku'
-# For Production mail sending
-gem 'postmark-rails'
+# For Resend mail sending
+gem 'resend'
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
