@@ -62,9 +62,15 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.delivery_method = :resend
-  config.action_mailer.postmark_settings = {
-    api_token: ENV['RESEND_API_KEY']
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.resend.com',
+    port: 587,
+    domain: 'quickdrop.sharecon.space',
+    user_name: 'resend',
+    password: ENV['RESEND_API_KEY'],
+    authentication: 'plain',
+    enable_starttls_auto: true
   }
   config.action_mailer.default_url_options = { 
     host: "quickdrop.sharecon.space", 
