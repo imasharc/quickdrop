@@ -61,17 +61,12 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.resend.com',
-    port: 587,
-    domain: 'quickdrop.sharecon.space',
-    user_name: 'resend',
-    password: ENV['RESEND_API_KEY'],
-    authentication: 'plain',
-    enable_starttls_auto: true
+  # Email via Resend HTTP API (not SMTP)
+  config.action_mailer.delivery_method = :resend
+  config.action_mailer.resend_settings = {
+    api_key: ENV['RESEND_API_KEY']
   }
+  
   config.action_mailer.default_url_options = { 
     host: "quickdrop.sharecon.space", 
     protocol: 'https' 
@@ -79,8 +74,8 @@ Rails.application.configure do
   config.action_mailer.default_options = {
     from: 'noreply@quickdrop.sharecon.space'
   }
-
-  # Ensure URL helpers use correct host
+  
+  # URL helpers
   Rails.application.routes.default_url_options = { 
     host: 'quickdrop.sharecon.space', 
     protocol: 'https' 
