@@ -72,7 +72,7 @@ Rails.application.configure do
     protocol: 'https' 
   }
   config.action_mailer.default_options = {
-    from: 'noreply@quickdrop.sharecon.space'
+    from: 'onboarding@resend.dev'
   }
   
   # URL helpers
