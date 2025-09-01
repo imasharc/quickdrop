@@ -3,9 +3,9 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   Rails.application.routes.default_url_options = { 
-  host: 'quickdrop.sharecon.space', 
-  protocol: 'https' 
-}
+    host: 'quickdrop.sharecon.space', 
+    protocol: 'https' 
+  }
 
   # Code is not reloaded between requests.
   config.enable_reloading = false
@@ -61,34 +61,24 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Email via Resend HTTP API (not SMTP)
+  # Email via Resend HTTP API
   config.action_mailer.delivery_method = :resend
-  config.action_mailer.resend_settings = {
-    api_key: ENV['RESEND_API_KEY']
+  
+  # Use your verified domain for from address
+  config.action_mailer.default_options = {
+    from: 'noreply@quickdrop.sharecon.space'
   }
   
   config.action_mailer.default_url_options = { 
     host: "quickdrop.sharecon.space", 
     protocol: 'https' 
   }
-  config.action_mailer.default_options = {
-    from: 'onboarding@resend.dev'
-  }
-  
+
   # URL helpers
   Rails.application.routes.default_url_options = { 
     host: 'quickdrop.sharecon.space', 
     protocol: 'https' 
   }
-
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
